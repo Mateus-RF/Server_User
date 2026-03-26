@@ -11,12 +11,6 @@ const SECRET = "meu_segredo"
 
 const users = []
 
-const token = jwt.sign(
-    { id: user.id, username: user.username },
-    SECRET,
-    { expiresIn: "1h" }
-  )
-
 /* REGISTER */
 app.post("/register", (req, res) => {
 
@@ -40,13 +34,19 @@ app.post("/register", (req, res) => {
 
   users.push(newUser)
 
+  const token = jwt.sign(
+    { id: newUser.id, username: newUser.username },
+    SECRET,
+    { expiresIn: "1h" }
+  )
+
   res.json({
     message: "Usuário criado",
     user: {
       id: newUser.id,
       username: newUser.username
     },
-    token: token
+    token
   })
 })
 
@@ -54,6 +54,10 @@ app.post("/register", (req, res) => {
 app.get("/login", (req, res) => {
 
   const { username, password } = req.query
+
+  if (!username || !password) {
+    return res.status(400).json({ message: "username e password obrigatórios" })
+  }
 
   const user = users.find(
     u => u.username === username && u.password === password
@@ -63,6 +67,11 @@ app.get("/login", (req, res) => {
     return res.status(401).json({ message: "Credenciais inválidas" })
   }
 
+  const token = jwt.sign(
+    { id: user.id, username: user.username },
+    SECRET,
+    { expiresIn: "1h" }
+  )
 
   res.json({
     user: {
