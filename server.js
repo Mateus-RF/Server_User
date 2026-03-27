@@ -53,7 +53,7 @@ app.post("/register", (req, res) => {
 /* LOGIN */
 app.post("/login", (req, res) => {
 
-  const { username, password } = req.query
+  const { username, password } = req.body
 
   if (!username || !password) {
     return res.status(400).json({ message: "username e password obrigatórios" })
