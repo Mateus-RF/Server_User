@@ -51,7 +51,7 @@ app.post("/register", (req, res) => {
 })
 
 /* LOGIN */
-app.get("/login", (req, res) => {
+app.post("/login", (req, res) => {
 
   const { username, password } = req.query
 
